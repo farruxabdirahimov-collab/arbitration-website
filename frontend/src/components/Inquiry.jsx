@@ -36,7 +36,9 @@ export default function Inquiry({ t, lang }) {
       setForm(EMPTY);
       setStatus("sent");
     } catch (err) {
-      console.error("inquiry failed:", err);
+      // Name the URL: the usual cause is a misconfigured API base, and
+      // "failed to fetch" alone does not show which host was called.
+      console.error(`inquiry failed: POST ${API}/inquiries/ —`, err);
       setStatus("error");
     }
   }

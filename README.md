@@ -78,6 +78,25 @@ bot with `python manage.py check_telegram` in this service's console.
 **Frontend** — root directory `frontend/`. Build `npm run build`, serve `dist/`.
 Set `VITE_API_URL=https://<your-api-domain>/api`.
 
+Vite bakes that value into the bundle at **build** time, so changing it needs
+a redeploy, not a restart. Unset, the build posts to `/api` on its own domain
+— where the static file server answers with the page — and the inquiry form
+fails with the generic "something went wrong". The browser console says so
+explicitly in a production build.
+
+### The form says "something went wrong"
+
+Almost always one of three, in this order:
+
+1. `VITE_API_URL` unset or wrong on the frontend service → the request never
+   reaches Django. Check the failing request's host in the browser's Network
+   tab; open `https://<your-api-domain>/api/health/`, which must return
+   `{"status": "ok"}`.
+2. The frontend's domain missing from `CORS_ALLOWED_ORIGINS` on the backend →
+   the browser blocks the response. The console names CORS explicitly.
+3. The backend's domain missing from `DJANGO_ALLOWED_HOSTS` → Django answers
+   400 to everything.
+
 ## Project context
 
 See [`CLAUDE.md`](./CLAUDE.md) — organisation facts, legal terminology, design
