@@ -78,7 +78,8 @@ browser blocks the inquiry form and the traffic beacon, silently. Verify the
 bot with `python manage.py check_telegram` in this service's console.
 
 **Frontend** — root directory `frontend/`. Build `npm run build`, serve `dist/`.
-Set `VITE_API_URL=https://<your-api-domain>/api`.
+Set `VITE_API_URL=https://<your-api-domain>/api`. The service root works too —
+`/api` is appended when it is missing.
 
 Vite bakes that value into the bundle at **build** time, so changing it needs
 a redeploy, not a restart. Unset, the build posts to `/api` on its own domain
@@ -93,7 +94,9 @@ Almost always one of three, in this order:
 1. `VITE_API_URL` unset or wrong on the frontend service → the request never
    reaches Django. Check the failing request's host in the browser's Network
    tab; open `https://<your-api-domain>/api/health/`, which must return
-   `{"status": "ok"}`.
+   `{"status": "ok"}`. A 404 in the backend's access log for a path without
+   `/api` means the request arrived and CORS passed — only the base URL is
+   short.
 2. The frontend's domain missing from `CORS_ALLOWED_ORIGINS` on the backend →
    the browser blocks the response. The console names CORS explicitly, and
    the backend logs its effective allowlist at every boot (`Accepting browser
