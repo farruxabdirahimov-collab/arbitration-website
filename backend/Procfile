@@ -1,1 +1,1 @@
-web: python manage.py migrate --no-input && gunicorn config.wsgi --bind 0.0.0.0:$PORT
+web: PY=$(command -v python || command -v python3) && "$PY" manage.py migrate --no-input && gunicorn config.wsgi --bind 0.0.0.0:$PORT

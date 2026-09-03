@@ -50,11 +50,18 @@ python manage.py check_telegram      # add --no-send to skip the test message
 ```
 
 It checks the token, then the chat, then actually posts, and prints
-Telegram's own reason plus what to do about it if a step fails. Run it in
-the **backend** service's Railway console — the frontend service has no
-Python, and `python: command not found` there means you are in the wrong
-service (`ls` should show `manage.py`). If `python` is missing in the backend
-service too, use `python3`.
+Telegram's own reason plus what to do about it if a step fails.
+
+Run it in the **backend** service's Railway console. `python: command not
+found` there almost always means the console is attached to the frontend
+service, which is a Node image with no Python — `ls` in the backend service
+shows `manage.py`. Where only `python3` exists, use that.
+
+Without a shell, the deploy log answers the first question on its own: the
+app logs `Telegram signalling is configured for chat …` or `Telegram
+signalling is OFF …` on every boot. And submitting the inquiry form on the
+live site is the real end-to-end test — the signal either arrives or the
+reason is in the log.
 
 The failure modes all look the same from inside the group — the token is
 wrong, the chat id is wrong, or the bot was never added — which is exactly
