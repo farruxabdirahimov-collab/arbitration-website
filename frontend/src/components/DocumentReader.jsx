@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Emblem from "./Emblem";
+import DownloadButton from "./DownloadButton";
 import { DOC_TEXT } from "../data/documents";
 import { NAVY, IVORY, ORANGE, SERIF, SANS } from "../theme";
 
@@ -45,7 +46,7 @@ function paginate(blocks) {
   return pages;
 }
 
-export default function DocumentReader({ t, docKey, onClose }) {
+export default function DocumentReader({ t, lang, docKey, docLangs, onClose }) {
   const blocks = DOC_TEXT[docKey] || [];
   const meta = t.docCards.find((d) => d.key === docKey);
   const pages = paginate(blocks);
@@ -72,8 +73,13 @@ export default function DocumentReader({ t, docKey, onClose }) {
             </div>
           </div>
           <div style={s.barRight}>
-            {/* TODO: swap for a real PDF link from the backend */}
-            <button style={s.dl} disabled>{t.download}</button>
+            <DownloadButton
+              t={t}
+              docKey={docKey}
+              lang={lang}
+              availableLangs={docLangs[docKey]}
+              style={s.dl}
+            />
             <button style={s.close} onClick={onClose} aria-label={t.close}>×</button>
           </div>
         </div>
@@ -143,8 +149,7 @@ const s = {
     fontSize: 13,
     padding: "9px 16px",
     borderRadius: 2,
-    cursor: "not-allowed",
-    opacity: 0.6,
+    whiteSpace: "nowrap",
   },
   close: { background: "transparent", border: "none", color: IVORY, fontSize: 30, cursor: "pointer", lineHeight: 1, padding: "0 4px" },
 

@@ -1,17 +1,26 @@
 import { useState } from "react";
 import SectionLabel from "./SectionLabel";
+import { track } from "../data/analytics";
+import { API } from "../data/api";
 import { PHONE, PHONE_HREF } from "../data/i18n";
 import { NAVY, BLUE, IVORY, ORANGE, SANS, SERIF } from "../theme";
 
-const API = import.meta.env.VITE_API_URL || "/api";
-
 const EMPTY = { name: "", contact: "", subject: "", message: "" };
 
-export default function Inquiry({ t }) {
+export default function Inquiry({ t, lang }) {
   const [form, setForm] = useState(EMPTY);
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  const [started, setStarted] = useState(false);
 
-  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+  const set = (k) => (e) => {
+    // Fired once, on the first keystroke: the gap between started and
+    // submitted is where the form is losing people.
+    if (!started) {
+      track("inquiry_start", { lang });
+      setStarted(true);
+    }
+    setForm({ ...form, [k]: e.target.value });
+  };
   const valid = form.name.trim() && form.contact.trim() && form.message.trim();
 
   async function submit() {

@@ -89,12 +89,21 @@ frontend/src/
     arbitrators.js         the five arbitrators + photo imports
     clause.js              model arbitration clause templates
     documents.js           GENERATED full text of Statute/Rules/Charter
+    docFiles.js            which signed PDFs exist + their page-1 previews
+    analytics.js           cookie-free event beacon
+    api.js                 API base URL
   components/              one component per section, styles co-located
   assets/                  emblem + arbitrator portraits
+  assets/docs/             GENERATED page-1 previews of the signed PDFs
 
 backend/
   config/                  settings, urls, wsgi
   apps/inquiries/          Inquiry model, public create API, admin triage
+  apps/documents/          signed PDFs + manifest and download endpoints
+  apps/analytics/          Event model, public beacon, admin dashboard
+  apps/notifications/      Telegram signalling (see docs/analytics.md)
+
+scripts/prepare_document.py  rotate a scan and publish it (docs/documents.md)
 ```
 
 ### Design system
@@ -118,21 +127,24 @@ from the source `.docx` if the legal text changes.
 
 Working: trilingual UI, emblem, hero, three pillars, stats, court structure,
 document reader (A4 sheets), arbitrator cards with photos, interactive clause
-builder with copy-to-clipboard, inquiry form → Django API, admin triage.
+builder with copy-to-clipboard, inquiry form → Django API, admin triage,
+signed-PDF downloads with page-1 previews, cookie-free traffic analytics,
+Telegram signalling.
+
+Published PDFs: Statute and Rules in uz/ru/en. The Charter is not yet
+supplied — its card simply shows no download button.
 
 ## Next up (rough priority)
 
-1. **PDF downloads.** Both "Download PDF" buttons are disabled placeholders.
-   Serve the real Statute/Rules/Charter PDFs from the backend and wire them up.
-2. **Fee calculator.** Compute the registration + administrative fee from the
+1. **Fee calculator.** Compute the registration + administrative fee from the
    amount in dispute, per the Rules (Ch. XII, arts. 48–51). Needs the actual
    fee schedule — ask the client for it.
-3. **Case filing.** Turn the inquiry form into a real intake: file uploads,
+2. **Case filing.** Turn the inquiry form into a real intake: file uploads,
    auto-assigned case number (`№01/2026`), status tracking for the parties.
-4. **Arbitrator specialisations.** Add field/language tags (FIDIC construction,
+3. **Arbitrator specialisations.** Add field/language tags (FIDIC construction,
    banking, energy…) and filtering. Parties choose arbitrators by expertise, so
    this is the roster's actual value.
-5. Mobile nav (the desktop nav is hidden under 900px with nothing replacing it).
+4. Mobile nav (the desktop nav is hidden under 900px with nothing replacing it).
 
 ## Conventions
 
@@ -140,7 +152,16 @@ builder with copy-to-clipboard, inquiry form → Django API, admin triage.
   worth a comment; `// set state` is not.
 - Keep all user-facing strings in `data/i18n.js` — never inline them in JSX.
 - The inquiry endpoint is public and unauthenticated: it is rate-limited
-  (20/hour) and the serializer is write-only. Keep it that way.
+  (20/hour) and the serializer is write-only. Keep it that way. The events
+  endpoint follows the same shape on its own, looser bucket.
+- The Telegram bot is a **signal** channel: it is told that an inquiry
+  arrived, never what it says. Dispute content stays behind the admin login —
+  see `docs/analytics.md`. Do not add inquiry fields to the message.
+- Analytics are first-party and cookie-free: no third-party script, no cookie,
+  no IP stored. That is what keeps the site free of a consent banner.
+- Signed PDFs are added with `scripts/prepare_document.py`, never by hand —
+  see `docs/documents.md`. The generated previews under `assets/docs/` are as
+  generated as `data/documents.js`.
 - Never commit `.env`.
 
 ## Open legal question (flagged for the client, affects site copy)

@@ -58,6 +58,10 @@ export const T = {
     ],
     openDoc: "Hujjatni oʻqish",
     download: "PDF yuklab olish",
+    downloadOther: "PDF — {lang}",
+    langNames: { uz: "oʻzbekcha", ru: "ruscha", en: "inglizcha" },
+    docSigned: "Imzolangan asl nusxa · 1-bet",
+    docPreviewAlt: "{doc} — birinchi bet",
     close: "Yopish",
 
     rosterTitle: "Arbitrlar tarkibi",
@@ -148,6 +152,10 @@ export const T = {
     ],
     openDoc: "Читать документ",
     download: "Скачать PDF",
+    downloadOther: "PDF — {lang}",
+    langNames: { uz: "узбекский", ru: "русский", en: "английский" },
+    docSigned: "Подписанный оригинал · стр. 1",
+    docPreviewAlt: "{doc} — первая страница",
     close: "Закрыть",
 
     rosterTitle: "Состав арбитров",
@@ -238,6 +246,10 @@ export const T = {
     ],
     openDoc: "Read document",
     download: "Download PDF",
+    downloadOther: "PDF — {lang}",
+    langNames: { uz: "Uzbek", ru: "Russian", en: "English" },
+    docSigned: "Signed original · page 1",
+    docPreviewAlt: "{doc} — first page",
     close: "Close",
 
     rosterTitle: "Our arbitrators",

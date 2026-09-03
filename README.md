@@ -43,8 +43,16 @@ needed locally.
 |--------|------|---------|
 | GET | `/api/health/` | Health check |
 | POST | `/api/inquiries/` | Submit a public inquiry (rate-limited, 20/hour) |
+| POST | `/api/events/` | Record a traffic event (cookie-free, 240/hour) |
+| GET | `/api/documents/` | Which governing documents exist, per language |
+| GET | `/api/documents/<key>/<lang>/pdf/` | The signed PDF |
 
-Inquiries are triaged in the Django admin at `/admin/`.
+Inquiries are triaged in the Django admin at `/admin/`; traffic is at
+`/admin/analytics/event/dashboard/`.
+
+See [`docs/analytics.md`](./docs/analytics.md) for the Telegram bot and the
+traffic table, and [`docs/documents.md`](./docs/documents.md) for publishing a
+signed PDF.
 
 ## Deployment (Railway)
 
@@ -59,7 +67,13 @@ DJANGO_DEBUG=False
 DJANGO_ALLOWED_HOSTS=<your-api-domain>
 CORS_ALLOWED_ORIGINS=https://<your-frontend-domain>
 INQUIRY_NOTIFY_EMAIL=registry@<your-domain>
+TELEGRAM_BOT_TOKEN=<from @BotFather>
+TELEGRAM_CHAT_ID=<group id, starts with -100>
 ```
+
+`CORS_ALLOWED_ORIGINS` must list the frontend's real domain — without it the
+browser blocks the inquiry form and the traffic beacon, silently. Verify the
+bot with `python manage.py check_telegram` in this service's console.
 
 **Frontend** — root directory `frontend/`. Build `npm run build`, serve `dist/`.
 Set `VITE_API_URL=https://<your-api-domain>/api`.
