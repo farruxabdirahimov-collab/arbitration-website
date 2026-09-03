@@ -95,7 +95,10 @@ Almost always one of three, in this order:
    tab; open `https://<your-api-domain>/api/health/`, which must return
    `{"status": "ok"}`.
 2. The frontend's domain missing from `CORS_ALLOWED_ORIGINS` on the backend →
-   the browser blocks the response. The console names CORS explicitly.
+   the browser blocks the response. The console names CORS explicitly, and
+   the backend logs its effective allowlist at every boot (`Accepting browser
+   requests from: [...]`). The `www.` and bare forms of a domain are
+   interchangeable — listing either allows both.
 3. The backend's domain missing from `DJANGO_ALLOWED_HOSTS` → Django answers
    400 to everything.
 

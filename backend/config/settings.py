@@ -124,7 +124,28 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {"anon": "20/hour", "events": "240/hour"},
 }
 
-CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS", "http://localhost:5173")
+
+def with_www_siblings(origins: list[str]) -> list[str]:
+    """Allow both www. and the bare domain once either is configured.
+
+    A site answers on both, visitors arrive at both, and listing only one
+    breaks the inquiry form for half of them — silently, because a blocked
+    CORS response looks to the form exactly like a server outage. The pair is
+    the same site by definition, so there is nothing to gain by making
+    somebody notice the difference at 2am.
+    """
+    allowed = list(origins)
+    for origin in origins:
+        scheme, _, host = origin.partition("://")
+        if not host:
+            continue
+        sibling = f"{scheme}://{host[4:]}" if host.startswith("www.") else f"{scheme}://www.{host}"
+        if sibling not in allowed:
+            allowed.append(sibling)
+    return allowed
+
+
+CORS_ALLOWED_ORIGINS = with_www_siblings(env_list("CORS_ALLOWED_ORIGINS", "http://localhost:5173"))
 
 # --- Inquiries ------------------------------------------------------------
 INQUIRY_NOTIFY_EMAIL = os.getenv("INQUIRY_NOTIFY_EMAIL", "")

@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "PY=$(command -v python || command -v python3) && \"$PY\" manage.py migrate --no-input && \"$PY\" manage.py collectstatic --no-input && gunicorn config.wsgi --bind 0.0.0.0:$PORT",
+    "startCommand": "PY=$(command -v python || command -v python3) && \"$PY\" manage.py migrate --no-input && \"$PY\" manage.py collectstatic --no-input && gunicorn config.wsgi --bind 0.0.0.0:$PORT --access-logfile -",
     "restartPolicyType": "ON_FAILURE"
   }
 }
