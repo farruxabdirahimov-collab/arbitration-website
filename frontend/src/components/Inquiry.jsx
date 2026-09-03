@@ -7,9 +7,17 @@ import { NAVY, BLUE, IVORY, ORANGE, SANS, SERIF } from "../theme";
 
 const EMPTY = { name: "", contact: "", subject: "", message: "" };
 
+// Mirrors validate_message in backend/apps/inquiries/serializers.py. A form
+// that accepts what the server will refuse is worse than one that refuses
+// early: the sender learns nothing, and the registry never sees the enquiry.
+const MIN_MESSAGE = 10;
+
 export default function Inquiry({ t, lang }) {
   const [form, setForm] = useState(EMPTY);
-  const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  // idle | sending | sent | invalid | error
+  //   invalid — the server refused the contents (400); the sender can fix it
+  //   error   — the server could not be reached; only the phone will help
+  const [status, setStatus] = useState("idle");
   const [started, setStarted] = useState(false);
 
   const set = (k) => (e) => {
@@ -21,7 +29,8 @@ export default function Inquiry({ t, lang }) {
     }
     setForm({ ...form, [k]: e.target.value });
   };
-  const valid = form.name.trim() && form.contact.trim() && form.message.trim();
+  const messageTooShort = form.message.trim().length < MIN_MESSAGE;
+  const valid = form.name.trim() && form.contact.trim() && !messageTooShort;
 
   async function submit() {
     if (!valid || status === "sending") return;
@@ -32,6 +41,13 @@ export default function Inquiry({ t, lang }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+      if (res.status === 400) {
+        // Something about the contents, not the connection. Telling the
+        // sender to phone instead would send them away over a typo.
+        console.warn("inquiry rejected:", await res.text());
+        setStatus("invalid");
+        return;
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setForm(EMPTY);
       setStatus("sent");
@@ -82,6 +98,12 @@ export default function Inquiry({ t, lang }) {
               />
             </label>
 
+            {/* Only once they have started typing — a hint on an untouched
+                field reads as an error the visitor has not made yet. */}
+            {form.message.trim() && messageTooShort && (
+              <p style={s.hint}>{t.inqMessageShort}</p>
+            )}
+            {status === "invalid" && <p style={s.error}>{t.inqInvalid}</p>}
             {status === "error" && <p style={s.error}>{t.inqError}</p>}
 
             <button
@@ -142,6 +164,7 @@ const s = {
     borderRadius: 3,
   },
   error: { color: "#FFB4A2", fontSize: 14, margin: 0 },
+  hint: { color: "#B9C2D6", fontSize: 13.5, margin: 0 },
   note: { textAlign: "center", fontSize: 14, color: "#B9C2D6", marginTop: 8 },
   phone: { color: BLUE, fontWeight: 700, textDecoration: "none" },
   success: {

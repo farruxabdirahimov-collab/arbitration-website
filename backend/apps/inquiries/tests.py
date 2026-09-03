@@ -58,3 +58,24 @@ class InquiryApiTests(TestCase):
     def test_status_cannot_be_set_from_outside(self):
         self.client.post("/api/inquiries/", {**self.payload, "status": "closed"})
         self.assertEqual(Inquiry.objects.get().status, Inquiry.Status.NEW)
+
+
+class MessageLengthTests(TestCase):
+    """The 400 that this produces is the one a visitor can actually fix, so
+    the frontend has to refuse the same input — see MIN_MESSAGE there."""
+
+    base = {"name": "A. Party", "contact": "a@example.com", "subject": "S"}
+
+    def test_a_too_short_message_is_refused(self):
+        response = self.client.post("/api/inquiries/", {**self.base, "message": "test"})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("message", response.json())
+        self.assertFalse(Inquiry.objects.exists())
+
+    def test_whitespace_does_not_count_towards_the_minimum(self):
+        response = self.client.post("/api/inquiries/", {**self.base, "message": "  hi      "})
+        self.assertEqual(response.status_code, 400)
+
+    def test_ten_characters_is_enough(self):
+        response = self.client.post("/api/inquiries/", {**self.base, "message": "1234567890"})
+        self.assertEqual(response.status_code, 201)

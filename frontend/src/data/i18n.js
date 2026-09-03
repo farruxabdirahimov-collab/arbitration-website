@@ -89,6 +89,8 @@ export const T = {
     inqSending: "Yuborilmoqda...",
     inqSuccess: "Murojaatingiz qabul qilindi. Tez orada siz bilan bogʻlanamiz.",
     inqError: "Xatolik yuz berdi. Iltimos, telefon orqali bogʻlaning.",
+    inqInvalid: "Maʼlumotlarni tekshirib, qaytadan yuboring.",
+    inqMessageShort: "Vaziyatingizni kamida 10 ta belgi bilan tavsiflang.",
     inqOr: "Yoki bevosita qoʻngʻiroq qiling:",
 
     contactTitle: "Bogʻlanish",
@@ -183,6 +185,8 @@ export const T = {
     inqSending: "Отправка...",
     inqSuccess: "Ваше обращение принято. Мы скоро свяжемся с вами.",
     inqError: "Произошла ошибка. Пожалуйста, свяжитесь по телефону.",
+    inqInvalid: "Проверьте данные и отправьте ещё раз.",
+    inqMessageShort: "Опишите ситуацию хотя бы в 10 символах.",
     inqOr: "Или позвоните напрямую:",
 
     contactTitle: "Контакты",
@@ -277,6 +281,8 @@ export const T = {
     inqSending: "Sending...",
     inqSuccess: "Your inquiry has been received. We will contact you shortly.",
     inqError: "Something went wrong. Please reach us by phone.",
+    inqInvalid: "Please check the fields and send again.",
+    inqMessageShort: "Please describe your situation in at least 10 characters.",
     inqOr: "Or call us directly:",
 
     contactTitle: "Contact",

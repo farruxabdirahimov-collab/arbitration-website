@@ -2,6 +2,10 @@ from rest_framework import serializers
 
 from .models import Inquiry
 
+# Mirrored by MIN_MESSAGE in frontend/src/components/Inquiry.jsx, so the form
+# refuses a too-short message before sending it rather than after.
+MIN_MESSAGE = 10
+
 
 class InquiryCreateSerializer(serializers.ModelSerializer):
     """Public write-only serializer.
@@ -15,6 +19,6 @@ class InquiryCreateSerializer(serializers.ModelSerializer):
         fields = ["name", "contact", "subject", "message"]
 
     def validate_message(self, value: str) -> str:
-        if len(value.strip()) < 10:
+        if len(value.strip()) < MIN_MESSAGE:
             raise serializers.ValidationError("Please describe your situation in a little more detail.")
         return value
