@@ -74,8 +74,25 @@ TELEGRAM_CHAT_ID=<group id, starts with -100>
 ```
 
 `CORS_ALLOWED_ORIGINS` must list the frontend's real domain — without it the
-browser blocks the inquiry form and the traffic beacon, silently. Verify the
-bot with `python manage.py check_telegram` in this service's console.
+browser blocks the inquiry form and the traffic beacon, silently.
+
+Then create the first admin account — deploying does not, and should not,
+create one, since the password would have to live in an environment variable
+to do it. In the backend service's console:
+
+```bash
+PY=$(command -v python || command -v python3 || echo /opt/venv/bin/python)
+"$PY" manage.py createsuperuser
+"$PY" manage.py check_telegram      # verifies the bot end to end
+```
+
+The `PY=` line exists because a console shell does not always inherit the
+build's virtualenv on `PATH`, so a bare `python` can be missing in a service
+whose deploys are perfectly healthy.
+
+Until that account exists, inquiries and traffic are being recorded but
+nothing can be read: `/admin/` and the traffic dashboard both sit behind the
+login.
 
 **Frontend** — root directory `frontend/`. Build `npm run build`, serve `dist/`.
 Set `VITE_API_URL=https://<your-api-domain>/api`. The service root works too —

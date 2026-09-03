@@ -128,7 +128,9 @@ Tracked (`apps/analytics/models.py`):
 | `pageview` | Volume, sent once per page load |
 
 Read them at `/admin/analytics/event/dashboard/` (today and yesterday) or in
-the ordinary changelist, filterable by kind, language and country.
+the ordinary changelist, filterable by kind, language and country. Both need
+an admin account — see the deployment section of the README; events are
+recorded from the first visit, but nothing is readable until one exists.
 
 Rate limits: 240 events/hour per client, separate from the 20/hour bucket the
 inquiry form uses — sharing it would silently drop a normal visitor's clicks.
