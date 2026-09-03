@@ -131,8 +131,8 @@ builder with copy-to-clipboard, inquiry form → Django API, admin triage,
 signed-PDF downloads with page-1 previews, cookie-free traffic analytics,
 Telegram signalling.
 
-Published PDFs: Statute in uz/ru/en, Rules in ru/en. The Uzbek Rules and the
-Charter are not yet supplied — their cards simply show no download button.
+Published PDFs: Statute and Rules in uz/ru/en. The Charter is not yet
+supplied — its card simply shows no download button.
 
 ## Next up (rough priority)
 

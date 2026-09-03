@@ -42,7 +42,7 @@ languages are `uz`, `ru`, `en`.
 | Document | uz | ru | en |
 |---|---|---|---|
 | Nizom (Statute) | ✅ | ✅ | ✅ |
-| Reglament (Rules) | — | ✅ | ✅ |
+| Reglament (Rules) | ✅ | ✅ | ✅ |
 | Ustav (Charter) | — | — | — |
 
 All published files are the signed cover page (page 1), approved by Board

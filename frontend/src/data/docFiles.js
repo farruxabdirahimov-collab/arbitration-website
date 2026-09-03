@@ -5,6 +5,7 @@ import { API } from "./api";
 import nizomUz from "../assets/docs/nizom_uz.jpg";
 import nizomRu from "../assets/docs/nizom_ru.jpg";
 import nizomEn from "../assets/docs/nizom_en.jpg";
+import reglamentUz from "../assets/docs/reglament_uz.jpg";
 import reglamentRu from "../assets/docs/reglament_ru.jpg";
 import reglamentEn from "../assets/docs/reglament_en.jpg";
 
@@ -23,6 +24,7 @@ export const DOC_PREVIEWS = {
   "nizom:uz": nizomUz,
   "nizom:ru": nizomRu,
   "nizom:en": nizomEn,
+  "reglament:uz": reglamentUz,
   "reglament:ru": reglamentRu,
   "reglament:en": reglamentEn,
 };
