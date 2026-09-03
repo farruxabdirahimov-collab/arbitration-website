@@ -76,23 +76,30 @@ TELEGRAM_CHAT_ID=<group id, starts with -100>
 `CORS_ALLOWED_ORIGINS` must list the frontend's real domain — without it the
 browser blocks the inquiry form and the traffic beacon, silently.
 
-Then create the first admin account — deploying does not, and should not,
-create one, since the password would have to live in an environment variable
-to do it. In the backend service's console:
+### The first admin account
 
-```bash
-PY=$(command -v python || command -v python3 || echo /opt/venv/bin/python)
-"$PY" manage.py createsuperuser
-"$PY" manage.py check_telegram      # verifies the bot end to end
+Nothing can be read out of this system without one — not an inquiry, not the
+traffic table — and both sit behind `/admin/`.
+
+Set these three variables, let the service redeploy, then **delete them
+again**:
+
+```
+DJANGO_SUPERUSER_USERNAME=registry
+DJANGO_SUPERUSER_PASSWORD=<a long password>
+DJANGO_SUPERUSER_EMAIL=registry@<your-domain>
 ```
 
-The `PY=` line exists because a console shell does not always inherit the
-build's virtualenv on `PATH`, so a bare `python` can be missing in a service
-whose deploys are perfectly healthy.
+The account is created on boot (`ensure_admin`), once. It is never touched
+again, so a password you change in the admin is never reset and redeploying
+is harmless. Sign in, change the password, remove the two variables — the
+deploy log prints that reminder each time it runs.
 
-Until that account exists, inquiries and traffic are being recorded but
-nothing can be read: `/admin/` and the traffic dashboard both sit behind the
-login.
+`createsuperuser` in the service's console does the same job without an
+environment variable, when the console cooperates: a console shell does not
+always inherit the build's virtualenv, so a bare `python` there may find a
+system interpreter with no Django in it. `/opt/venv/bin/python manage.py
+createsuperuser` is the usual fix on Nixpacks.
 
 **Frontend** — root directory `frontend/`. Build `npm run build`, serve `dist/`.
 Set `VITE_API_URL=https://<your-api-domain>/api`. The service root works too —

@@ -102,6 +102,7 @@ backend/
   config/                  settings, urls, wsgi
   apps/inquiries/          Inquiry model, public create API, admin triage
   apps/analytics/          Event model, public beacon, admin dashboard
+  apps/core/               deploy-time bootstrap (ensure_admin)
   apps/notifications/      Telegram signalling (see docs/analytics.md)
 
 scripts/prepare_document.py  rotate a scan and publish it (docs/documents.md)
