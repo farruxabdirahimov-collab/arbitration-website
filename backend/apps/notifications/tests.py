@@ -4,6 +4,8 @@ from django.test import TestCase, override_settings
 
 from apps.inquiries.models import Inquiry
 
+from . import telegram
+
 from .messages import admin_link, new_inquiry
 
 
@@ -61,3 +63,26 @@ class InquirySubmissionTests(TestCase):
             self.client.post("/api/inquiries/", self.payload)
         # The row is committed before the notification is attempted.
         self.assertEqual(Inquiry.objects.count(), 1)
+
+
+class TelegramDiagnosticsTests(TestCase):
+    """The check_telegram command exists to turn Telegram's terse refusals
+    into something a non-developer can act on, so the mapping is worth a test."""
+
+    def test_hints_cover_the_failures_that_look_identical_from_the_group(self):
+        from apps.notifications.management.commands.check_telegram import hint_for
+
+        self.assertIn("@BotFather", hint_for("HTTP 401: Unauthorized"))
+        self.assertIn("minus", hint_for("HTTP 400: Bad Request: chat not found"))
+        self.assertIn("administrator", hint_for("HTTP 400: Bad Request: not enough rights"))
+        self.assertIsNone(hint_for("HTTP 500: Internal Server Error"))
+
+    @override_settings(TELEGRAM_BOT_TOKEN="", TELEGRAM_CHAT_ID="")
+    def test_call_reports_a_missing_token_rather_than_raising(self):
+        ok, reason = telegram.call("getMe")
+        self.assertFalse(ok)
+        self.assertIn("TELEGRAM_BOT_TOKEN", reason)
+
+    @override_settings(TELEGRAM_BOT_TOKEN="", TELEGRAM_CHAT_ID="")
+    def test_send_is_a_no_op_when_unconfigured(self):
+        self.assertFalse(telegram.send("anything"))

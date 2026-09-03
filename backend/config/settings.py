@@ -146,6 +146,21 @@ SITE_ADMIN_URL = os.getenv("SITE_ADMIN_URL", "")
 if not SITE_ADMIN_URL and railway_host:
     SITE_ADMIN_URL = f"https://{railway_host}"
 
+# --- Logging --------------------------------------------------------------
+# Without this, an app logger's error reaches the platform log only through
+# Python's last-resort handler — which is enough to lose the reason a Telegram
+# notification failed, exactly when someone is trying to find out.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {"plain": {"format": "{levelname} {name}: {message}", "style": "{"}},
+    "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "plain"}},
+    "loggers": {
+        "apps": {"handlers": ["console"], "level": os.getenv("DJANGO_LOG_LEVEL", "INFO")},
+        "django": {"handlers": ["console"], "level": "INFO"},
+    },
+}
+
 # --- Security (production) -----------------------------------------------
 if not DEBUG:
     SECURE_SSL_REDIRECT = True

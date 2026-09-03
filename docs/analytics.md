@@ -43,6 +43,23 @@ Leave the token empty to switch notifications off. Telegram failures are
 logged and swallowed: the inquiry is committed to the database before the
 message is attempted, so a messenger outage can never lose a claim.
 
+### Checking it
+
+```bash
+python manage.py check_telegram      # add --no-send to skip the test message
+```
+
+It checks the token, then the chat, then actually posts, and prints
+Telegram's own reason plus what to do about it if a step fails. Run it in
+the **backend** service's Railway console — the frontend service has no
+Python, and `python: command not found` there means you are in the wrong
+service (`ls` should show `manage.py`). If `python` is missing in the backend
+service too, use `python3`.
+
+The failure modes all look the same from inside the group — the token is
+wrong, the chat id is wrong, or the bot was never added — which is exactly
+why the command asks Telegram about each one separately.
+
 ## The daily digest stays quiet on a quiet day
 
 ```bash
@@ -50,6 +67,10 @@ python manage.py send_digest              # yesterday, silent if nothing happene
 python manage.py send_digest --dry-run    # print instead of send
 python manage.py send_digest --force      # send even an empty day
 ```
+
+`--force` is not a way to test the bot — an empty day still produces a valid
+digest and tells you nothing about whether delivery works. Use
+`check_telegram` for that.
 
 A digest that arrives every morning regardless of news trains its readers to
 stop opening it.
