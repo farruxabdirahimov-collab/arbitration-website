@@ -1,0 +1,51 @@
+from unittest.mock import patch
+
+from django.test import TestCase, override_settings
+
+from apps.inquiries.models import Inquiry
+
+from .messages import new_inquiry
+
+
+@override_settings(SITE_ADMIN_URL="https://admin.example.uz")
+class InquirySignalTests(TestCase):
+    def setUp(self):
+        self.inquiry = Inquiry.objects.create(
+            name="Karin Weber",
+            contact="k.weber@example.de",
+            subject="Supply contract dispute",
+            message="Our counterparty in Tashkent has not paid EUR 2.4m since March.",
+        )
+
+    def test_message_carries_no_dispute_content(self):
+        """The whole point of the signal-only design: confidential facts must
+        stay behind the admin login, not sit in a group chat."""
+        text = new_inquiry(self.inquiry)
+        for secret in ("Karin Weber", "k.weber@example.de", "Supply contract", "2.4m"):
+            self.assertNotIn(secret, text)
+
+    def test_message_points_at_the_admin_record(self):
+        text = new_inquiry(self.inquiry)
+        self.assertIn(f"#{self.inquiry.pk}", text)
+        self.assertIn(f"https://admin.example.uz/admin/inquiries/inquiry/{self.inquiry.pk}/change/", text)
+
+
+class InquirySubmissionTests(TestCase):
+    payload = {
+        "name": "A. Party",
+        "contact": "a@example.com",
+        "subject": "Contract dispute",
+        "message": "We would like to know how to start arbitration proceedings.",
+    }
+
+    @patch("apps.inquiries.views.telegram.send")
+    def test_submission_signals_telegram(self, send):
+        self.assertEqual(self.client.post("/api/inquiries/", self.payload).status_code, 201)
+        send.assert_called_once()
+
+    @patch("apps.inquiries.views.telegram.send", side_effect=RuntimeError("bot is down"))
+    def test_inquiry_survives_a_telegram_outage(self, _send):
+        with self.assertRaises(RuntimeError):
+            self.client.post("/api/inquiries/", self.payload)
+        # The row is committed before the notification is attempted.
+        self.assertEqual(Inquiry.objects.count(), 1)

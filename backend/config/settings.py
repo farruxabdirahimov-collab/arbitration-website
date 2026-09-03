@@ -7,6 +7,7 @@ works with zero setup.
 """
 
 import os
+import sys
 from pathlib import Path
 
 import dj_database_url
@@ -42,7 +43,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     # local
+    "apps.analytics",
+    "apps.documents",
     "apps.inquiries",
+    "apps.notifications",
 ]
 
 MIDDLEWARE = [
@@ -116,7 +120,9 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.AnonRateThrottle"],
     # The inquiry form is public and unauthenticated — rate-limit it so the
     # registry inbox can't be flooded.
-    "DEFAULT_THROTTLE_RATES": {"anon": "20/hour"},
+    # Events are one beacon per click, so they get a far looser bucket than
+    # the inquiry form — see apps.analytics.views.EventThrottle.
+    "DEFAULT_THROTTLE_RATES": {"anon": "20/hour", "events": "240/hour"},
 }
 
 CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS", "http://localhost:5173")
@@ -127,6 +133,14 @@ EMAIL_BACKEND = os.getenv(
     "DJANGO_EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
 )
 
+# --- Telegram -------------------------------------------------------------
+# The bot is a signal channel only: it is told that an inquiry arrived, never
+# what it says. See apps/notifications/telegram.py.
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
+# Absolute base URL used to build the "open in admin" link in notifications.
+SITE_ADMIN_URL = os.getenv("SITE_ADMIN_URL", "")
+
 # --- Security (production) -----------------------------------------------
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
@@ -136,3 +150,9 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+    # The test client speaks http, so the redirect above would turn every
+    # request in the suite into a 301 and make the results depend on whether
+    # DJANGO_DEBUG happened to be exported.
+    if "test" in sys.argv:
+        SECURE_SSL_REDIRECT = False

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SectionLabel from "./SectionLabel";
+import { track } from "../data/analytics";
 import { CLAUSE, CITY, LAW, COUNT, LANG_NAME } from "../data/clause";
 import { NAVY, IVORY, ORANGE, SERIF, SANS, MAXW } from "../theme";
 
@@ -27,6 +28,9 @@ export default function ClauseBuilder({ t, lang }) {
       document.execCommand("copy");
       document.body.removeChild(ta);
     }
+    // A copied clause is a contract being drafted with this institution
+    // named in it — the closest thing the site has to a conversion.
+    track("clause_copy", { label: `${count}/${procLang}`, lang });
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   }

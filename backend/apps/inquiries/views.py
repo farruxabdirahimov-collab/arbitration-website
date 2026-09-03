@@ -5,6 +5,11 @@ from django.core.mail import send_mail
 from django.http import JsonResponse
 from rest_framework import generics
 
+from apps.analytics.models import Event
+from apps.analytics.recording import record
+from apps.notifications import telegram
+from apps.notifications.messages import new_inquiry
+
 from .models import Inquiry
 from .serializers import InquiryCreateSerializer
 
@@ -23,7 +28,11 @@ class InquiryCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         inquiry = serializer.save()
+        record(self.request, Event.Kind.INQUIRY_SUBMIT, label=str(inquiry.pk))
         self._notify(inquiry)
+        # Signal only — the message body never leaves the database. See
+        # apps/notifications/telegram.py for why.
+        telegram.send(new_inquiry(inquiry))
 
     def _notify(self, inquiry: Inquiry) -> None:
         """Email the registry. Never let a mail failure lose the inquiry —

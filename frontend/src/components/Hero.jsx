@@ -1,7 +1,8 @@
 import Emblem from "./Emblem";
+import { track } from "../data/analytics";
 import { NAVY, IVORY, ORANGE, SERIF } from "../theme";
 
-export default function Hero({ t }) {
+export default function Hero({ t, lang }) {
   return (
     <section id="top" style={s.hero}>
       <div style={s.glow} aria-hidden />
@@ -14,8 +15,20 @@ export default function Hero({ t }) {
         <p style={s.alt}>{t.orgAlt}</p>
         <p style={s.sub}>{t.heroSub}</p>
         <div style={s.ctas}>
-          <a href="#inquiry" style={s.primary}>{t.ctaFile}</a>
-          <a href="#docs" style={s.ghost}>{t.ctaRules}</a>
+          <a
+            href="#inquiry"
+            style={s.primary}
+            onClick={() => track("cta", { label: "file_claim", lang })}
+          >
+            {t.ctaFile}
+          </a>
+          <a
+            href="#docs"
+            style={s.ghost}
+            onClick={() => track("cta", { label: "rules", lang })}
+          >
+            {t.ctaRules}
+          </a>
         </div>
       </div>
     </section>

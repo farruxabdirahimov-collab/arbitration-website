@@ -1,0 +1,33 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div id="content-main">
+  {% for d in day_cards %}
+    <h2>{{ d.day }}</h2>
+    <p>
+      <strong>{{ d.views }}</strong> page views ·
+      <strong>{{ d.visitors }}</strong> visitors ·
+      <strong>{{ d.events }}</strong> events
+    </p>
+    {% if d.by_kind %}
+      <table>
+        <thead><tr><th>Action</th><th>Count</th></tr></thead>
+        <tbody>
+          {% for kind, n in d.by_kind.items %}<tr><td>{{ kind }}</td><td>{{ n }}</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+    {% if d.countries %}
+      <p>Countries: {% for c, n in d.countries %}{{ c }} {{ n }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+    {% endif %}
+    {% if d.langs %}
+      <p>Languages: {% for l, n in d.langs %}{{ l }} {{ n }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+    {% endif %}
+    {% if d.referrers %}
+      <p>Referrers: {% for r, n in d.referrers %}{{ r }} {{ n }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+    {% endif %}
+    <hr>
+  {% endfor %}
+  <p><a href="{% url 'admin:analytics_event_changelist' %}">All events →</a></p>
+</div>
+{% endblock %}
