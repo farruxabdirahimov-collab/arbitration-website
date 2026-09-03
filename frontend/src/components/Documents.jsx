@@ -5,7 +5,7 @@ import { track } from "../data/analytics";
 import { previewFor } from "../data/docFiles";
 import { NAVY, ORANGE, MUTED, SERIF, SANS, MAXW } from "../theme";
 
-export default function Documents({ t, lang, docLangs, onOpen }) {
+export default function Documents({ t, lang, onOpen }) {
   return (
     <section id="docs" style={s.section}>
       <SectionLabel>{t.docsTitle}</SectionLabel>
@@ -46,13 +46,7 @@ export default function Documents({ t, lang, docLangs, onOpen }) {
                 >
                   {t.openDoc}
                 </button>
-                <DownloadButton
-                  t={t}
-                  docKey={d.key}
-                  lang={lang}
-                  availableLangs={docLangs[d.key]}
-                  style={{ flex: 1 }}
-                />
+                <DownloadButton t={t} docKey={d.key} lang={lang} style={{ flex: 1 }} />
               </div>
             </article>
           );

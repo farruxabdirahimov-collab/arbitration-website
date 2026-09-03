@@ -13,8 +13,9 @@ Rotation is lossless — only the page's /Rotate flag changes, the scan itself
 is never re-encoded.
 
 Afterwards, add the generated .jpg to DOC_PREVIEWS in
-frontend/src/assets/../data/docFiles.js (the command prints the exact lines)
-and commit both files.
+frontend/src/data/docFiles.js (the command prints the exact lines) and commit
+both files. That map is also what decides which download buttons appear, so
+a PDF without its preview entry stays invisible.
 
 Requires: pip install pymupdf
 """
@@ -26,7 +27,11 @@ from pathlib import Path
 import pymupdf
 
 ROOT = Path(__file__).resolve().parent.parent
-PDF_DIR = ROOT / "backend" / "apps" / "documents" / "files"
+# The PDF ships with the site rather than through the API: a governing
+# document is a static file, and routing it through the backend would make
+# the most important thing on the documents page depend on the backend
+# being up.
+PDF_DIR = ROOT / "frontend" / "public" / "documents"
 PREVIEW_DIR = ROOT / "frontend" / "src" / "assets" / "docs"
 
 KEYS = ("nizom", "reglament", "ustav")

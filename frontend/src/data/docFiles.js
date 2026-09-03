@@ -1,7 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
-
-import { API } from "./api";
-
 import nizomUz from "../assets/docs/nizom_uz.jpg";
 import nizomRu from "../assets/docs/nizom_ru.jpg";
 import nizomEn from "../assets/docs/nizom_en.jpg";
@@ -17,8 +13,13 @@ import reglamentEn from "../assets/docs/reglament_en.jpg";
  * foreign counterparty's lawyer looks for. Showing it beats any amount of
  * copy claiming the same thing.
  *
- * Regenerate after adding a PDF to backend/apps/documents/files/ — see
- * docs/documents.md.
+ * The PDFs themselves live in public/documents/ and are served by whatever
+ * hosts the site. Governing documents are static files that change about
+ * once a decade; routing them through the API would make the single most
+ * important thing on this page depend on the backend being up, and on the
+ * backend existing at all.
+ *
+ * Both are generated — see docs/documents.md.
  */
 export const DOC_PREVIEWS = {
   "nizom:uz": nizomUz,
@@ -29,9 +30,7 @@ export const DOC_PREVIEWS = {
   "reglament:en": reglamentEn,
 };
 
-// Mirrors docCards[].key in i18n.js and DOC_KEYS in the backend's
-// apps/documents/catalog.py. Three copies is the price of two deployables;
-// the manifest endpoint is what catches them drifting apart.
+// Mirrors docCards[].key in i18n.js.
 export const DOC_KEYS = ["nizom", "reglament", "ustav"];
 
 // Tried in order when the document is not published in the reading language.
@@ -40,14 +39,15 @@ export const DOC_KEYS = ["nizom", "reglament", "ustav"];
 // has not been approved yet.
 const FALLBACK_ORDER = ["en", "ru", "uz"];
 
-/** Languages this document is published in, derived from the shipped previews. */
-export function bundledLangs(key) {
+/** Languages this document is published in. A preview exists exactly when
+ *  the PDF does — both are written by the same command. */
+export function publishedLangs(key) {
   return FALLBACK_ORDER.filter((lang) => DOC_PREVIEWS[`${key}:${lang}`]);
 }
 
 /** The language to actually serve: the reading language, or the best stand-in. */
-export function resolveLang(key, lang, availableLangs) {
-  const langs = availableLangs || bundledLangs(key);
+export function resolveLang(key, lang) {
+  const langs = publishedLangs(key);
   if (langs.includes(lang)) return lang;
   return FALLBACK_ORDER.find((l) => langs.includes(l)) || null;
 }
@@ -58,40 +58,5 @@ export function previewFor(key, lang) {
 }
 
 export function pdfUrl(key, lang) {
-  return `${API}/documents/${key}/${lang}/pdf/`;
-}
-
-/**
- * Which document/language pairs the deployed backend actually serves.
- *
- * The bundled previews are the immediate answer, so buttons render in their
- * final state on first paint; the manifest then corrects them if the backend
- * has been given a translation the current build does not know about. A hook
- * lives here rather than in a components/ file because this module is the one
- * place that owns "which documents exist".
- */
-export function useDocumentManifest() {
-  const bundled = useMemo(
-    () => Object.fromEntries(DOC_KEYS.map((key) => [key, bundledLangs(key)])),
-    [],
-  );
-  const [available, setAvailable] = useState(bundled);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(`${API}/documents/`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (!cancelled && data?.available) setAvailable(data.available);
-      })
-      .catch(() => {
-        /* keep the bundled answer — the backend being down must not hide
-           documents that are in this build anyway */
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  return available;
+  return `/documents/${key}_${lang}.pdf`;
 }

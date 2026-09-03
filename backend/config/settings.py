@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "corsheaders",
     # local
     "apps.analytics",
-    "apps.documents",
     "apps.inquiries",
     "apps.notifications",
 ]

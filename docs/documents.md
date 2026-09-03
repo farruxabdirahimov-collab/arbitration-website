@@ -16,9 +16,14 @@ python scripts/prepare_document.py ~/Downloads/SCAN.pdf reglament uz --rotate 18
 
 The script rotates losslessly (only the page's `/Rotate` flag changes — the
 scan is never re-encoded), writes the PDF to
-`backend/apps/documents/files/<key>_<lang>.pdf`, and renders the card preview
-to `frontend/src/assets/docs/<key>_<lang>.jpg`. It then prints the two lines
-to add to `DOC_PREVIEWS` in `frontend/src/data/docFiles.js`.
+`frontend/public/documents/<key>_<lang>.pdf`, and renders the card preview to
+`frontend/src/assets/docs/<key>_<lang>.jpg`. It then prints the two lines to
+add to `DOC_PREVIEWS` in `frontend/src/data/docFiles.js`.
+
+The PDFs ship with the static site, not through the API. A governing document
+is a static file that changes about once a decade; serving it from the backend
+would make the most important thing on this page depend on the backend being
+up — and, as it turned out, on the backend existing at all.
 
 **Open the generated preview and confirm it is the right way up before
 committing.** Nothing downstream can detect a wrong rotation.
@@ -28,14 +33,16 @@ languages are `uz`, `ru`, `en`.
 
 ## What happens automatically
 
-- `GET /api/documents/` reports which key/language pairs exist. The frontend
-  uses it so a download button never points at a missing file.
+- `DOC_PREVIEWS` is the single source of truth for what exists: a preview is
+  written by the same command as its PDF, so a download button can never
+  point at a missing file.
 - A document published in some languages but not the one being read falls
   back — labelled with the language actually served, e.g. "PDF — Russian" —
   so nobody opens a Russian file expecting English.
 - A document with no PDF at all shows no download button. A disabled button
   would be a promise about something the Board has not signed off.
-- Every download is counted server-side as a `doc_download` event.
+- Each download is reported as a `doc_download` event, when the analytics
+  backend is reachable. The download itself never depends on it.
 
 ## Currently published
 

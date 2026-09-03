@@ -95,11 +95,12 @@ frontend/src/
   components/              one component per section, styles co-located
   assets/                  emblem + arbitrator portraits
   assets/docs/             GENERATED page-1 previews of the signed PDFs
+frontend/public/
+  documents/               GENERATED signed PDFs, served as static files
 
 backend/
   config/                  settings, urls, wsgi
   apps/inquiries/          Inquiry model, public create API, admin triage
-  apps/documents/          signed PDFs + manifest and download endpoints
   apps/analytics/          Event model, public beacon, admin dashboard
   apps/notifications/      Telegram signalling (see docs/analytics.md)
 
@@ -160,8 +161,12 @@ supplied — its card simply shows no download button.
 - Analytics are first-party and cookie-free: no third-party script, no cookie,
   no IP stored. That is what keeps the site free of a consent banner.
 - Signed PDFs are added with `scripts/prepare_document.py`, never by hand —
-  see `docs/documents.md`. The generated previews under `assets/docs/` are as
-  generated as `data/documents.js`.
+  see `docs/documents.md`. They ship as static files under
+  `frontend/public/documents/`; the previews under `assets/docs/` are as
+  generated as `data/documents.js`, and their map decides which download
+  buttons appear.
+- The documents must stay readable and downloadable with the backend down.
+  Only the inquiry form, the Telegram signal and the traffic table need it.
 - Never commit `.env`.
 
 ## Open legal question (flagged for the client, affects site copy)

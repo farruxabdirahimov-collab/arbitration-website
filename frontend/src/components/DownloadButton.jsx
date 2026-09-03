@@ -1,3 +1,4 @@
+import { track } from "../data/analytics";
 import { pdfUrl, resolveLang } from "../data/docFiles";
 import { ORANGE, NAVY, SANS } from "../theme";
 
@@ -13,11 +14,11 @@ import { ORANGE, NAVY, SANS } from "../theme";
  *     promise about a document the Board has not signed off; the full text
  *     is readable either way, which is what the visitor actually came for.
  *
- * The download itself is counted server-side in apps/documents/views.py, so
- * there is no beacon here to double-count it.
+ * The PDF is a static file, so the click is counted here rather than by
+ * whatever serves it.
  */
-export default function DownloadButton({ t, docKey, lang, availableLangs, style }) {
-  const served = resolveLang(docKey, lang, availableLangs);
+export default function DownloadButton({ t, docKey, lang, style }) {
+  const served = resolveLang(docKey, lang);
 
   if (!served) return null;
 
@@ -30,6 +31,7 @@ export default function DownloadButton({ t, docKey, lang, availableLangs, style 
       target="_blank"
       rel="noopener noreferrer"
       style={{ ...s.base, ...s.on, ...style }}
+      onClick={() => track("doc_download", { label: `${docKey}:${served}`, lang })}
     >
       {label}
     </a>

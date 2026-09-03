@@ -12,7 +12,6 @@ import Inquiry from "./components/Inquiry";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import { track, trackPageview } from "./data/analytics";
-import { useDocumentManifest } from "./data/docFiles";
 import { T } from "./data/i18n";
 
 export default function App() {
@@ -20,10 +19,6 @@ export default function App() {
   // investors. Uzbek and Russian are one click away.
   const [lang, setLang] = useState("en");
   const [openDoc, setOpenDoc] = useState(null);
-
-  // Fetched once and shared, so the cards and the reader can never disagree
-  // about which translations are published.
-  const docLangs = useDocumentManifest();
 
   const t = T[lang];
 
@@ -46,7 +41,7 @@ export default function App() {
         <Pillars t={t} />
         <Stats t={t} />
         <CourtStructure t={t} />
-        <Documents t={t} lang={lang} docLangs={docLangs} onOpen={setOpenDoc} />
+        <Documents t={t} lang={lang} onOpen={setOpenDoc} />
         <Arbitrators t={t} lang={lang} />
         <ClauseBuilder t={t} lang={lang} />
         <Inquiry t={t} lang={lang} />
@@ -55,13 +50,7 @@ export default function App() {
       <Footer t={t} />
 
       {openDoc && (
-        <DocumentReader
-          t={t}
-          lang={lang}
-          docKey={openDoc}
-          docLangs={docLangs}
-          onClose={() => setOpenDoc(null)}
-        />
+        <DocumentReader t={t} lang={lang} docKey={openDoc} onClose={() => setOpenDoc(null)} />
       )}
     </>
   );

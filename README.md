@@ -44,8 +44,10 @@ needed locally.
 | GET | `/api/health/` | Health check |
 | POST | `/api/inquiries/` | Submit a public inquiry (rate-limited, 20/hour) |
 | POST | `/api/events/` | Record a traffic event (cookie-free, 240/hour) |
-| GET | `/api/documents/` | Which governing documents exist, per language |
-| GET | `/api/documents/<key>/<lang>/pdf/` | The signed PDF |
+
+The signed PDFs are static files shipped with the frontend
+(`/documents/<key>_<lang>.pdf`), not API routes — they stay downloadable
+whether or not the backend is running.
 
 Inquiries are triaged in the Django admin at `/admin/`; traffic is at
 `/admin/analytics/event/dashboard/`.

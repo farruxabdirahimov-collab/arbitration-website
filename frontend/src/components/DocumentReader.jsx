@@ -46,7 +46,7 @@ function paginate(blocks) {
   return pages;
 }
 
-export default function DocumentReader({ t, lang, docKey, docLangs, onClose }) {
+export default function DocumentReader({ t, lang, docKey, onClose }) {
   const blocks = DOC_TEXT[docKey] || [];
   const meta = t.docCards.find((d) => d.key === docKey);
   const pages = paginate(blocks);
@@ -73,13 +73,7 @@ export default function DocumentReader({ t, lang, docKey, docLangs, onClose }) {
             </div>
           </div>
           <div style={s.barRight}>
-            <DownloadButton
-              t={t}
-              docKey={docKey}
-              lang={lang}
-              availableLangs={docLangs[docKey]}
-              style={s.dl}
-            />
+            <DownloadButton t={t} docKey={docKey} lang={lang} style={s.dl} />
             <button style={s.close} onClick={onClose} aria-label={t.close}>×</button>
           </div>
         </div>
