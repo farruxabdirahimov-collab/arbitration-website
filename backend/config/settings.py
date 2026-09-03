@@ -139,7 +139,12 @@ EMAIL_BACKEND = os.getenv(
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
 # Absolute base URL used to build the "open in admin" link in notifications.
+# Defaults to this service's own Railway domain, because that is always where
+# the admin lives — nobody should have to look a URL up to make the bot work.
+# Set it explicitly only when the admin is reached through a custom domain.
 SITE_ADMIN_URL = os.getenv("SITE_ADMIN_URL", "")
+if not SITE_ADMIN_URL and railway_host:
+    SITE_ADMIN_URL = f"https://{railway_host}"
 
 # --- Security (production) -----------------------------------------------
 if not DEBUG:

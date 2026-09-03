@@ -4,7 +4,7 @@ from django.test import TestCase, override_settings
 
 from apps.inquiries.models import Inquiry
 
-from .messages import new_inquiry
+from .messages import admin_link, new_inquiry
 
 
 @override_settings(SITE_ADMIN_URL="https://admin.example.uz")
@@ -28,6 +28,18 @@ class InquirySignalTests(TestCase):
         text = new_inquiry(self.inquiry)
         self.assertIn(f"#{self.inquiry.pk}", text)
         self.assertIn(f"https://admin.example.uz/admin/inquiries/inquiry/{self.inquiry.pk}/change/", text)
+
+
+class AdminLinkTests(TestCase):
+    @override_settings(SITE_ADMIN_URL="")
+    def test_link_degrades_to_a_path_when_the_base_url_is_unknown(self):
+        """Still useful pasted after the site's own domain, and never a
+        message that says "https:///admin/..."."""
+        self.assertEqual(admin_link("/admin/x/"), "/admin/x/")
+
+    @override_settings(SITE_ADMIN_URL="https://api.example.uz/")
+    def test_trailing_slash_does_not_double_up(self):
+        self.assertEqual(admin_link("/admin/x/"), "https://api.example.uz/admin/x/")
 
 
 class InquirySubmissionTests(TestCase):

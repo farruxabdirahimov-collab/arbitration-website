@@ -28,13 +28,16 @@ Setup:
 3. Get the chat id: send any message in the group, then open
    `https://api.telegram.org/bot<TOKEN>/getUpdates` and read
    `result[].message.chat.id` — a group id starts with `-100`.
-4. Set on the backend (Railway → Variables), never in the repository:
+4. Set on the backend service (Railway → Variables), never in the repository:
 
    ```
    TELEGRAM_BOT_TOKEN=...
    TELEGRAM_CHAT_ID=-100...
-   SITE_ADMIN_URL=https://<backend>.up.railway.app
    ```
+
+   `SITE_ADMIN_URL` is optional: it defaults to the service's own
+   `RAILWAY_PUBLIC_DOMAIN`, which is where the admin lives. Set it only if
+   the admin is reached through a custom domain instead.
 
 Leave the token empty to switch notifications off. Telegram failures are
 logged and swallowed: the inquiry is committed to the database before the
@@ -48,9 +51,30 @@ python manage.py send_digest --dry-run    # print instead of send
 python manage.py send_digest --force      # send even an empty day
 ```
 
-Schedule it on Railway as a cron service at `0 4 * * *` (04:00 UTC ≈ 09:00
-Tashkent). A digest that arrives every morning regardless of news trains its
-readers to stop opening it.
+A digest that arrives every morning regardless of news trains its readers to
+stop opening it.
+
+To run it daily, add a **second Railway service** on the same repository —
+Railway runs a cron service by starting the container, running its start
+command once, and shutting it down again:
+
+| Setting | Value |
+|---|---|
+| Source | the same GitHub repo |
+| Root Directory | `backend` |
+| Custom Start Command | `python manage.py send_digest` |
+| Cron Schedule | `0 4 * * *` |
+
+`0 4 * * *` is: minute 0, hour 4, every day. Railway's cron runs in UTC, so
+04:00 UTC is 09:00 in Tashkent.
+
+Give it the same `DATABASE_URL`, `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`
+as the web service (Railway variable references, e.g.
+`${{backend.DATABASE_URL}}`, keep them in one place). It must read the same
+database as the site — a digest against an empty database reports nothing.
+
+This is a convenience, not a requirement: the same numbers are always in the
+admin dashboard.
 
 ## Events: first-party and cookie-free
 
