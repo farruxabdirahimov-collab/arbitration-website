@@ -3,6 +3,7 @@ import mirzayeva from "../assets/mirzayeva.jpg";
 import yunusov from "../assets/yunusov.jpg";
 import achilov from "../assets/achilov.jpg";
 import eshnazarov from "../assets/eshnazarov.jpg";
+import liliya from "../assets/liliya.jpg";
 
 /**
  * Arbitrators of the International Arbitration Court at the Union.
@@ -87,9 +88,7 @@ export const ARBITRATORS = [
   },
   {
     id: "liliya",
-    // Photo not yet supplied by the client: the card falls back to a monogram
-    // until a portrait is dropped into assets/ and imported here.
-    photo: null,
+    photo: liliya,
     name: { uz: "Li Li Ya", ru: "Ли Ли Я", en: "Li Li Ya" },
     role: { uz: "Arbitr", ru: "Арбитр", en: "Arbitrator" },
     // Foreign nationals on the roster are not decoration: the Statute requires
