@@ -89,7 +89,7 @@ export const ARBITRATORS = [
   {
     id: "liliya",
     photo: liliya,
-    name: { uz: "Li Li Ya", ru: "Ли Ли Я", en: "Li Li Ya" },
+    name: { uz: "Liliya", ru: "Лилия", en: "Liliya" },
     role: { uz: "Arbitr", ru: "Арбитр", en: "Arbitrator" },
     // Foreign nationals on the roster are not decoration: the Statute requires
     // at least a third of the Court of Arbitration to be foreign specialists,
