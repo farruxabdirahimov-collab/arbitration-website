@@ -96,6 +96,10 @@ export const ARBITRATORS = [
     // and a mixed roster is what makes the forum credible to a foreign party.
     citizenship: { uz: "Xitoy fuqarosi", ru: "Гражданка КНР", en: "Citizen of China" },
     region: { uz: "Toshkent shahri", ru: "г. Ташкент", en: "Tashkent city" },
+    // Year only, as for every other entry. The client supplied the full date
+    // (31 December 1983); a public roster does not need the day and month, and
+    // an exact date of birth is personal data with no purpose on this page.
+    born: 1983,
     experience: 25,
     // Deliberately framed as experience *between* Uzbek and foreign businesses,
     // not as attracting investment into Uzbekistan: an arbitrator described as
