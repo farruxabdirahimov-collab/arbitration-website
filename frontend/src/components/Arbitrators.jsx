@@ -12,13 +12,19 @@ export default function Arbitrators({ t, lang }) {
         {ARBITRATORS.map((a) => (
           <article key={a.id} style={s.card}>
             <div style={s.photoWrap}>
-              <img src={a.photo} alt={a.name[lang]} style={s.photo} loading="lazy" />
+              {a.photo ? (
+                <img src={a.photo} alt={a.name[lang]} style={s.photo} loading="lazy" />
+              ) : (
+                <div style={s.monogram} aria-hidden="true">
+                  {initials(a.name[lang])}
+                </div>
+              )}
               <span style={s.role}>{a.role[lang]}</span>
             </div>
             <div style={s.body}>
               <h3 style={s.name}>{a.name[lang]}</h3>
               <div style={s.meta}>
-                {a.region[lang]} · {a.born}
+                {[a.citizenship?.[lang], a.region[lang], a.born].filter(Boolean).join(" · ")}
               </div>
               <p style={s.bio}>{a.bio[lang]}</p>
             </div>
@@ -27,6 +33,19 @@ export default function Arbitrators({ t, lang }) {
       </div>
     </section>
   );
+}
+
+// A roster entry stays publishable before its portrait arrives: an empty frame
+// looks like a broken page, which is the opposite of the impression the roster
+// has to make.
+function initials(name) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
 }
 
 const s = {
@@ -60,6 +79,18 @@ const s = {
     letterSpacing: 0.5,
     padding: "5px 12px",
     textTransform: "uppercase",
+  },
+  monogram: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: SERIF,
+    fontSize: 54,
+    fontWeight: 700,
+    color: "rgba(14,42,74,0.35)",
+    letterSpacing: 2,
   },
   body: { padding: "18px 20px 22px" },
   name: { fontFamily: SERIF, fontSize: 20, fontWeight: 700, color: NAVY, lineHeight: 1.2, margin: "0 0 6px" },

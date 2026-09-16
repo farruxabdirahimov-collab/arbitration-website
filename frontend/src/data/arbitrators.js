@@ -85,4 +85,27 @@ export const ARBITRATORS = [
       en: "Graduate of the Presidential Academy. 20 years of experience.",
     },
   },
+  {
+    id: "liliya",
+    // Photo not yet supplied by the client: the card falls back to a monogram
+    // until a portrait is dropped into assets/ and imported here.
+    photo: null,
+    name: { uz: "Li Li Ya", ru: "Ли Ли Я", en: "Li Li Ya" },
+    role: { uz: "Arbitr", ru: "Арбитр", en: "Arbitrator" },
+    // Foreign nationals on the roster are not decoration: the Statute requires
+    // at least a third of the Court of Arbitration to be foreign specialists,
+    // and a mixed roster is what makes the forum credible to a foreign party.
+    citizenship: { uz: "Xitoy fuqarosi", ru: "Гражданка КНР", en: "Citizen of China" },
+    region: { uz: "Toshkent shahri", ru: "г. Ташкент", en: "Tashkent city" },
+    experience: 25,
+    // Deliberately framed as experience *between* Uzbek and foreign businesses,
+    // not as attracting investment into Uzbekistan: an arbitrator described as
+    // promoting one side's economy reads as pre-committed to that side, which
+    // is exactly the appearance of partiality the roster has to avoid.
+    bio: {
+      uz: "25 yillik tadbirkorlik tajribasiga ega. Oʻzbekiston va chet el tadbirkorlari oʻrtasidagi ishbilarmonlik munosabatlari boʻyicha tajribali arbitr.",
+      ru: "25 лет предпринимательского опыта. Опытный арбитр в сфере деловых отношений между узбекскими и иностранными предпринимателями.",
+      en: "25 years of business experience. An arbitrator experienced in commercial relations between Uzbek and foreign entrepreneurs.",
+    },
+  },
 ];
