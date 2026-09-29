@@ -3,6 +3,7 @@ import mirzayeva from "../assets/mirzayeva.jpg";
 import yunusov from "../assets/yunusov.jpg";
 import achilov from "../assets/achilov.jpg";
 import eshnazarov from "../assets/eshnazarov.jpg";
+import liliya from "../assets/liliya.jpg";
 
 /**
  * Arbitrators of the International Arbitration Court at the Union.
@@ -83,6 +84,22 @@ export const ARBITRATORS = [
       uz: "Oʻzbekiston Prezidenti huzuridagi Akademiyani tamomlagan. 20 yillik staj.",
       ru: "Окончил Академию при Президенте РУз. Стаж 20 лет.",
       en: "Graduate of the Presidential Academy. 20 years of experience.",
+    },
+  },
+  {
+    id: "liliya",
+    photo: liliya,
+    // Only a given name was supplied and no birth year — the card omits the
+    // year rather than guess one. Ask the client for the full name.
+    name: { uz: "Liliya", ru: "Лилия", en: "Liliya" },
+    role: { uz: "Arbitr", ru: "Арбитр", en: "Arbitrator" },
+    region: { uz: "Toshkent shahri", ru: "г. Ташкент", en: "Tashkent city" },
+    born: null,
+    experience: 25,
+    bio: {
+      uz: "Xitoy Xalq Respublikasi fuqarosi. Tadbirkorlik sohasida 25 yillik tajriba. Xorijiy investitsiyalar iqtisodiyoti boʻyicha mutaxassis.",
+      ru: "Гражданка КНР. 25 лет предпринимательского опыта. Специалист по экономике иностранных инвестиций.",
+      en: "Citizen of the People’s Republic of China. 25 years of business experience. Specialist in the economics of foreign investment.",
     },
   },
 ];

@@ -18,7 +18,7 @@ export default function Arbitrators({ t, lang }) {
             <div style={s.body}>
               <h3 style={s.name}>{a.name[lang]}</h3>
               <div style={s.meta}>
-                {a.region[lang]} · {a.born}
+                {[a.region[lang], a.born].filter(Boolean).join(" · ")}
               </div>
               <p style={s.bio}>{a.bio[lang]}</p>
             </div>

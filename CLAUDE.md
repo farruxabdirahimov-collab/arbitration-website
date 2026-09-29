@@ -86,7 +86,7 @@ frontend/src/
   App.jsx                  section order lives here
   data/
     i18n.js                all UI strings (uz/ru/en) + phone/email constants
-    arbitrators.js         the five arbitrators + photo imports
+    arbitrators.js         the arbitrators + photo imports
     clause.js              model arbitration clause templates
     documents.js           GENERATED full text of Statute/Rules/Charter
     docFiles.js            which signed PDFs exist + their page-1 previews
