@@ -94,11 +94,11 @@ export const ARBITRATORS = [
     role: { uz: "Arbitr", ru: "Арбитр", en: "Arbitrator" },
     region: { uz: "Toshkent shahri", ru: "г. Ташкент", en: "Tashkent city" },
     born: 1988,
-    experience: 25,
+    experience: 16,
     bio: {
-      uz: "Xitoy Xalq Respublikasi fuqarosi. Tadbirkorlik sohasida 25 yillik tajriba. Xorijiy investitsiyalar iqtisodiyoti boʻyicha mutaxassis.",
-      ru: "Гражданка КНР. 25 лет предпринимательского опыта. Специалист по экономике иностранных инвестиций.",
-      en: "Citizen of the People’s Republic of China. 25 years of business experience. Specialist in the economics of foreign investment.",
+      uz: "Xitoy Xalq Respublikasi fuqarosi. Tadbirkorlik sohasida 16 yillik tajriba. Xorijiy investitsiyalar iqtisodiyoti boʻyicha mutaxassis.",
+      ru: "Гражданка КНР. 16 лет предпринимательского опыта. Специалист по экономике иностранных инвестиций.",
+      en: "Citizen of the People’s Republic of China. 16 years of business experience. Specialist in the economics of foreign investment.",
     },
   },
 ];
