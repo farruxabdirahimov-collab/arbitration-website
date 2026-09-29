@@ -89,12 +89,11 @@ export const ARBITRATORS = [
   {
     id: "liliya",
     photo: liliya,
-    // Only a given name was supplied and no birth year — the card omits the
-    // year rather than guess one. Ask the client for the full name.
+    // Listed by given name only, as the client confirmed.
     name: { uz: "Liliya", ru: "Лилия", en: "Liliya" },
     role: { uz: "Arbitr", ru: "Арбитр", en: "Arbitrator" },
     region: { uz: "Toshkent shahri", ru: "г. Ташкент", en: "Tashkent city" },
-    born: null,
+    born: 1963,
     experience: 25,
     bio: {
       uz: "Xitoy Xalq Respublikasi fuqarosi. Tadbirkorlik sohasida 25 yillik tajriba. Xorijiy investitsiyalar iqtisodiyoti boʻyicha mutaxassis.",
