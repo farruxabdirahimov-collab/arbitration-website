@@ -93,7 +93,7 @@ export const ARBITRATORS = [
     name: { uz: "Liliya", ru: "Лилия", en: "Liliya" },
     role: { uz: "Arbitr", ru: "Арбитр", en: "Arbitrator" },
     region: { uz: "Toshkent shahri", ru: "г. Ташкент", en: "Tashkent city" },
-    born: 1963,
+    born: 1988,
     experience: 25,
     bio: {
       uz: "Xitoy Xalq Respublikasi fuqarosi. Tadbirkorlik sohasida 25 yillik tajriba. Xorijiy investitsiyalar iqtisodiyoti boʻyicha mutaxassis.",
