@@ -4,6 +4,7 @@ import yunusov from "../assets/yunusov.jpg";
 import achilov from "../assets/achilov.jpg";
 import eshnazarov from "../assets/eshnazarov.jpg";
 import liliya from "../assets/liliya.jpg";
+import ochilov from "../assets/ochilov.jpg";
 
 /**
  * Arbitrators of the International Arbitration Court at the Union.
@@ -99,6 +100,21 @@ export const ARBITRATORS = [
       uz: "Xitoy Xalq Respublikasi fuqarosi. Tadbirkorlik sohasida 16 yillik tajriba. Xorijiy investitsiyalar iqtisodiyoti boʻyicha mutaxassis.",
       ru: "Гражданка КНР. 16 лет предпринимательского опыта. Специалист по экономике иностранных инвестиций.",
       en: "Citizen of the People’s Republic of China. 16 years of business experience. Specialist in the economics of foreign investment.",
+    },
+  },
+  {
+    id: "ochilov",
+    photo: ochilov,
+    name: { uz: "Ochilov Olimjon Obidovich", ru: "Очилов Олимжон Обидович", en: "Olimjon O. Ochilov" },
+    role: { uz: "Arbitr", ru: "Арбитр", en: "Arbitrator" },
+    region: { uz: "Samarqand viloyati", ru: "Самаркандская область", en: "Samarkand region" },
+    born: 1979,
+    // Counted from his first post (2003); the CV's 1996 start is his student years.
+    experience: 23,
+    bio: {
+      uz: "Huquqshunos va filolog. Rus va ingliz tillarini biladi. Savdo-sanoat palatasida xorijiy investitsiyalarni jalb qilish boʻyicha ishlagan. Birlashmaning Samarqand viloyati filiali rahbari v.b.",
+      ru: "Юрист и филолог. Владеет русским и английским языками. Работал в Торгово-промышленной палате по привлечению иностранных инвестиций. И.о. руководителя Самаркандского филиала Объединения.",
+      en: "Jurist and philologist. Speaks Russian and English. Worked at the Chamber of Commerce and Industry on attracting foreign investment. Acting head of the Union’s Samarkand branch.",
     },
   },
 ];
